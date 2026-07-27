@@ -9,6 +9,7 @@ workspaces and [Turborepo](https://turbo.build), versioned and released with
 | Package | Description |
 | --- | --- |
 | [`@trailpack/react-codeconventions`](packages/conventions) | Shared minimal oxlint + oxfmt config |
+| [`@trailpack/ui`](packages/ui) | React component library and vanilla-extract theme |
 
 Workspaces are picked up from `packages/*` and `apps/*`. Any package with
 `"private": true` is skipped by the release pipeline.
