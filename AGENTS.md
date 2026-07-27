@@ -55,6 +55,18 @@ pnpm changeset               # record a change for the next release
 pnpm changeset status        # show what is queued for the next release
 ```
 
+## Git
+
+**Never commit without being asked.** Make the changes, leave them in the
+working tree, and report what was changed. Committing is the maintainer's step,
+and an unrequested commit forces them to undo it before they can review or
+reshape the work. The same applies to `git push`, branch creation, tags and any
+other operation that publishes state — including staging with `git add`, which
+is only useful as a prelude to a commit.
+
+"Commit this" authorises exactly the commit being discussed, not the ones after
+it. Ask again for the next one.
+
 ## Two rules that apply to every change
 
 Everything else about packaging and releasing lives in the skills below. These
