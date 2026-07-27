@@ -1,23 +1,23 @@
 import { recipe } from '@vanilla-extract/recipes';
-import { vars } from '../../theme/contract.css';
+import { vars } from '../../theme/themes.css';
 
 export const button = recipe({
   base: {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: vars.space.sm,
+    gap: vars.space[2],
     border: `1px solid transparent`,
     borderRadius: vars.radius.md,
-    fontFamily: vars.font.body,
-    fontWeight: vars.fontWeight.medium,
-    lineHeight: vars.lineHeight.tight,
+    fontFamily: vars.font.family.sans,
+    fontWeight: vars.font.weight.medium,
+    lineHeight: vars.font.lineHeight.tight,
     cursor: 'pointer',
     transition: 'background-color 120ms ease, border-color 120ms ease',
     selectors: {
       '&:focus-visible': {
-        outline: `2px solid ${vars.color.focus}`,
-        outlineOffset: '2px',
+        outline: `${vars.focusRing.width} solid ${vars.color.ring}`,
+        outlineOffset: vars.focusRing.offset,
       },
       '&:disabled': {
         cursor: 'not-allowed',
@@ -27,43 +27,52 @@ export const button = recipe({
   },
 
   variants: {
+    // Only the filled variant reads from `vars.tone`; `neutral` and `ghost` are
+    // chrome, not a tone. A component that does vary across all six — a Badge,
+    // an Alert — can index `vars.tone[name]` rather than listing them.
     tone: {
       accent: {
-        backgroundColor: vars.color.accent,
-        color: vars.color.accentText,
+        backgroundColor: vars.tone.accent.solid,
+        color: vars.tone.accent.onSolid,
         selectors: {
-          '&:hover:not(:disabled)': { backgroundColor: vars.color.accentHover },
+          '&:hover:not(:disabled)': { backgroundColor: vars.tone.accent.solidHover },
+          '&:active:not(:disabled)': { backgroundColor: vars.tone.accent.solidActive },
         },
       },
       neutral: {
         backgroundColor: vars.color.surface,
         borderColor: vars.color.border,
-        color: vars.color.text,
+        color: vars.color.foreground,
         selectors: {
-          '&:hover:not(:disabled)': { backgroundColor: vars.color.surfaceRaised },
+          '&:hover:not(:disabled)': { backgroundColor: vars.color.muted },
+          '&:active:not(:disabled)': {
+            backgroundColor: vars.color.muted,
+            borderColor: vars.color.borderStrong,
+          },
         },
       },
       ghost: {
         backgroundColor: 'transparent',
-        color: vars.color.text,
+        color: vars.color.foreground,
         selectors: {
-          '&:hover:not(:disabled)': { backgroundColor: vars.color.surface },
+          '&:hover:not(:disabled)': { backgroundColor: vars.color.muted },
+          '&:active:not(:disabled)': { backgroundColor: vars.color.border },
         },
       },
     },
 
     size: {
       sm: {
-        fontSize: vars.fontSize.sm,
-        padding: `${vars.space.xs} ${vars.space.sm}`,
+        fontSize: vars.font.size.sm,
+        padding: `${vars.space[1]} ${vars.space[2]}`,
       },
       md: {
-        fontSize: vars.fontSize.md,
-        padding: `${vars.space.sm} ${vars.space.md}`,
+        fontSize: vars.font.size.md,
+        padding: `${vars.space[2]} ${vars.space[4]}`,
       },
       lg: {
-        fontSize: vars.fontSize.lg,
-        padding: `${vars.space.sm} ${vars.space.lg}`,
+        fontSize: vars.font.size.lg,
+        padding: `${vars.space[2]} ${vars.space[6]}`,
       },
     },
 

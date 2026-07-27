@@ -33,9 +33,9 @@ const preview: Preview = {
         className={context.globals.theme === 'dark' ? darkTheme : undefined}
         style={{
           background: vars.color.background,
-          color: vars.color.text,
-          fontFamily: vars.font.body,
-          padding: vars.space.lg,
+          color: vars.color.foreground,
+          fontFamily: vars.font.family.sans,
+          padding: vars.space[6],
         }}
       >
         <Story />

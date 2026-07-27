@@ -1,2 +1,2 @@
-export { vars } from './contract.css';
-export { darkTheme } from './themes.css';
+export { darkTheme, vars } from './themes.css';
+export type { ToneName } from './tokens';
