@@ -110,24 +110,12 @@ These have all actually occurred here. Check them before theorising.
 **`E422 — Failed to validate repository information`, after provenance was
 signed.** The package is missing a `repository` field, or its `url` does not
 resolve to this repository. Provenance is signed first and validated second, so
-seeing "Provenance statement published to transparency log" in the log does not
-mean the upload succeeded. Add to the package's `package.json`:
-
-```json
-{
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tobia-codes/trailpack-react.git",
-    "directory": "packages/<name>"
-  }
-}
-```
+"Provenance statement published to transparency log" appearing in the log does
+not mean the upload succeeded. The new-package skill has the required shape.
 
 **`EBADDEVENGINES`.** An `npm` command ran with the repository root as its
-working directory. The root `package.json` declares
-`devEngines.packageManager = pnpm`, which makes npm refuse to run at all. Move
-the call into a package directory, or pass an explicit `cwd`. Do not "fix" this
-by deleting `devEngines`.
+working directory; see AGENTS.md. Move the call into a package directory or pass
+an explicit `cwd` — do not "fix" it by deleting `devEngines`.
 
 **`403` on publish, for a version that already exists.** The
 already-published check in `scripts/publish-workspace.mjs` failed silently — its

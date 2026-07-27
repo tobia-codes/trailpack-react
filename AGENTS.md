@@ -55,32 +55,26 @@ pnpm changeset               # record a change for the next release
 pnpm changeset status        # show what is queued for the next release
 ```
 
-## Conventions for publishable packages
+## Two rules that apply to every change
 
-Every package under `packages/*` that is meant to reach npm must have:
+Everything else about packaging and releasing lives in the skills below. These
+two are here because they are easy to violate while working on something else
+entirely:
 
-- `"publishConfig": { "access": "public" }` — required for scoped packages.
-- A `repository` field with `type`, `url` and the `directory` within the
-  monorepo. **Provenance validation rejects the upload without it**, after the
-  signature has already been issued.
-- An explicit `files` array. Only what is listed there ships; verify with
-  `npm pack --dry-run` from inside the package directory.
-- Tooling the consumer owns (linters, formatters, React) declared as
-  `peerDependencies`, not `dependencies`.
+- **Never edit a `version` field by hand.** Versions are derived from changesets;
+  a manual bump desynchronises the pipeline. See the release skill.
+- **Never remove `repository`, `publishConfig` or `files` from a published
+  package's `package.json`.** Each one causes a failure only much later, at
+  publish time. See the new-package skill for what they do.
 
-Packages that should never be published are marked `"private": true`; the
-release script skips them automatically.
-
-## Releases
-
-Versions are never edited by hand. Each user-facing change carries a changeset;
-CI turns accumulated changesets into a version PR, and merging that PR publishes.
-The full procedure, the expected output of each stage, and troubleshooting for
-the known failure modes live in the release skill (see below).
-
-Human-facing documentation of the same flow is in [README.md](README.md).
+Packages marked `"private": true` are skipped by the release script and are
+exempt from both.
 
 ## Skills
+
+The release flow is also documented for humans in [README.md](README.md); the
+skills below are the version written for agents.
+
 
 Skills are a Claude Code feature and are loaded automatically by Claude. **Agents
 that do not support skills — Antigravity, Copilot and others — should read these
