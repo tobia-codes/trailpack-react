@@ -18,14 +18,14 @@ are evaluated here at build time; what ships is a plain stylesheet plus a token
 object holding `var(--tp-…)` strings. Components and tokens work in any React
 setup, with no bundler plugin and no vanilla-extract package.
 
-You only need vanilla-extract in your app if you want to write your *own*
+You only need vanilla-extract in your app if you want to write your _own_
 `.css.ts` files against these tokens — and then it is your dependency, on your
 terms, not something this package imposes. See [Tokens](#tokens).
 
 ## Usage
 
 Import the stylesheet once, at the root of your app. It carries the compiled
-component styles *and* the light theme applied to `:root`:
+component styles _and_ the light theme applied to `:root`:
 
 ```tsx
 import '@trailpack/react-ui/styles.css';
@@ -43,9 +43,7 @@ Dark mode is a class you put on any element; everything below it switches.
 ```tsx
 import { darkTheme } from '@trailpack/react-ui/theme';
 
-<div className={darkTheme}>
-  {/* tokens resolve to their dark values in here */}
-</div>
+<div className={darkTheme}>{/* tokens resolve to their dark values in here */}</div>;
 ```
 
 Apply it to `<html>` for a whole-app switch, or to a subtree to invert just one
@@ -89,9 +87,9 @@ Available scales: `color`, `space`, `radius`, `font`, `fontSize`, `fontWeight`,
 
 ## Components
 
-| Component | Notable props |
-| --- | --- |
-| `Button` | `tone` (`accent`/`neutral`/`ghost`), `size`, `fullWidth` |
+| Component | Notable props                                            |
+| --------- | -------------------------------------------------------- |
+| `Button`  | `tone` (`accent`/`neutral`/`ghost`), `size`, `fullWidth` |
 
 It forwards the remaining DOM props and merges an incoming `className`.
 
