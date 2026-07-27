@@ -37,6 +37,15 @@ jobs:
       # fails the job before anything is published rather than mid-publish.
       - run: pnpm build
 
+      # The same checks CI runs on pull requests and `develop`, repeated here
+      # because CI cannot gate this job: the two workflows are triggered
+      # independently by the same push, and a red CI run would not stop a
+      # publish. These steps do — they fail the job before the version PR is
+      # opened or anything reaches the registry.
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm format:check
+
       # Trusted publishing over OIDC requires npm >= 11.5.1, which Node 24
       # already bundles. Upgrading npm here is not possible anyway: the root
       # package.json declares devEngines.packageManager = pnpm, so npm exits

@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    # `main` is deliberately absent: the release workflow runs the same checks
+    # on every push there, and it is the one that can actually stop a publish.
+    # Listing it here would only duplicate the build on a second runner.
+    branches: [develop, stage]
+
+# A superseded run tells you nothing, so keep only the newest per ref. The
+# release workflow deliberately does the opposite — a cancelled publish would
+# leave the registry half-updated.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Separate steps rather than one `turbo run build lint test format:check`:
+      # a failure then names itself in the job summary instead of hiding inside
+      # a combined log. Turbo still caches across them within the run.
+      #
+      # `build` comes first because `test` depends on it (see turbo.json), and
+      # because a package that does not compile makes every later failure noise.
+      - run: pnpm build
+
+      # `!cancelled()` so all three report in one run. Without it a failing test
+      # aborts the job and a formatting error stays hidden until the next push —
+      # two round trips for two independent problems.
+      - run: pnpm lint
+        if: ${{ !cancelled() }}
+      - run: pnpm test
+        if: ${{ !cancelled() }}
+      - run: pnpm format:check
+        if: ${{ !cancelled() }}
