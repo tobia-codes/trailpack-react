@@ -37,6 +37,7 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
     "dev": "storybook dev -p 6006 --no-open",
     "lint": "oxlint",
     "storybook:build": "storybook build -o storybook-static"
