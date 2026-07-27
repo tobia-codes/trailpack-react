@@ -1,4 +1,4 @@
-# @trailpack/ui
+# @trailpack/react-ui
 
 React component library for Trailpack projects, styled with
 [vanilla-extract](https://vanilla-extract.style). Ships a token contract, a
@@ -7,7 +7,7 @@ light and a dark theme, and a small set of base components.
 ## Install
 
 ```sh
-pnpm add @trailpack/ui react react-dom
+pnpm add @trailpack/react-ui react react-dom
 ```
 
 `react` and `react-dom` are peer dependencies — the consuming app owns their
@@ -28,8 +28,8 @@ Import the stylesheet once, at the root of your app. It carries the compiled
 component styles *and* the light theme applied to `:root`:
 
 ```tsx
-import '@trailpack/ui/styles.css';
-import { Button, Stack, Text } from '@trailpack/ui';
+import '@trailpack/react-ui/styles.css';
+import { Button, Stack, Text } from '@trailpack/react-ui';
 
 export function Example() {
   return (
@@ -47,7 +47,7 @@ export function Example() {
 Dark mode is a class you put on any element; everything below it switches.
 
 ```tsx
-import { darkTheme } from '@trailpack/ui/theme';
+import { darkTheme } from '@trailpack/react-ui/theme';
 
 <div className={darkTheme}>
   {/* tokens resolve to their dark values in here */}
@@ -65,7 +65,7 @@ your own `.css.ts` files:
 ```ts
 // Card.css.ts
 import { style } from '@vanilla-extract/css';
-import { vars } from '@trailpack/ui/theme';
+import { vars } from '@trailpack/react-ui/theme';
 
 export const card = style({
   background: vars.color.surface,

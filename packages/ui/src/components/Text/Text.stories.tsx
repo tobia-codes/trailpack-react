@@ -35,5 +35,5 @@ export const Tones: Story = {
 };
 
 export const Mono: Story = {
-  args: { mono: true, children: 'pnpm add @trailpack/ui' },
+  args: { mono: true, children: 'pnpm add @trailpack/react-ui' },
 };
