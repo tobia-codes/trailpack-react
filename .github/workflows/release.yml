@@ -32,8 +32,10 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Trusted publishing over OIDC requires npm >= 11.5.1.
-      - run: npm install -g npm@latest
+      # Trusted publishing over OIDC requires npm >= 11.5.1, which Node 24
+      # already bundles. Upgrading npm here is not possible anyway: the root
+      # package.json declares devEngines.packageManager = pnpm, so npm exits
+      # with EBADDEVENGINES for any command run from the repo root.
 
       - name: Create or update version PR
         id: changesets

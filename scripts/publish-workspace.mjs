@@ -17,7 +17,10 @@ for (const { name, version, path } of workspacePackages) {
   let alreadyPublished = false;
 
   try {
+    // Runs in the package directory, not the repo root: the root package.json
+    // declares devEngines.packageManager = pnpm, which makes npm refuse to run.
     const output = execFileSync('npm', ['view', `${name}@${version}`, 'version'], {
+      cwd: path,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
     });
