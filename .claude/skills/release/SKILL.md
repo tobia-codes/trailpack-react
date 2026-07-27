@@ -16,8 +16,12 @@ Only stage 1 is done by a human or an agent. Stages 2 and 3 are automated by
 
 ### 1. Record the change — `pnpm changeset`
 
-Run it after making a change that affects a published package. It writes a file
-such as `.changeset/olive-pans-shout.md`:
+Run it when asked to record a change that affects a published package — never on
+your own initiative, and never to "finish off" a code change you just made. See
+the Changesets section of [AGENTS.md](../../../AGENTS.md) for why the bump level
+is the maintainer's call.
+
+It writes a file such as `.changeset/olive-pans-shout.md`:
 
 ```markdown
 ---

@@ -29,16 +29,10 @@ component styles *and* the light theme applied to `:root`:
 
 ```tsx
 import '@trailpack/react-ui/styles.css';
-import { Button, Stack, Text } from '@trailpack/react-ui';
+import { Button } from '@trailpack/react-ui';
 
 export function Example() {
-  return (
-    <Stack gap="md" align="start">
-      <Text size="xl" weight="bold">Pack list</Text>
-      <Text tone="muted">Everything you need, nothing you don't.</Text>
-      <Button tone="accent">Add item</Button>
-    </Stack>
-  );
+  return <Button tone="accent">Add item</Button>;
 }
 ```
 
@@ -98,10 +92,8 @@ Available scales: `color`, `space`, `radius`, `font`, `fontSize`, `fontWeight`,
 | Component | Notable props |
 | --- | --- |
 | `Button` | `tone` (`accent`/`neutral`/`ghost`), `size`, `fullWidth` |
-| `Stack` | `direction`, `gap`, `align`, `justify`, `wrap` |
-| `Text` | `as`, `size`, `weight`, `tone`, `leading`, `mono` |
 
-All three forward the remaining DOM props and merge an incoming `className`.
+It forwards the remaining DOM props and merges an incoming `className`.
 
 ## Development
 

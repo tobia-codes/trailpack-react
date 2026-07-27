@@ -1,6 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Stack } from '../Stack/Stack';
+import { vars } from '../../theme';
 import { Button } from './Button';
+
+const row = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: vars.space.sm,
+} as const;
 
 const meta = {
   title: 'Components/Button',
@@ -19,21 +26,21 @@ export const Default: Story = {};
 
 export const Tones: Story = {
   render: (args) => (
-    <Stack direction="row" gap="sm" align="center">
+    <div style={row}>
       <Button {...args} tone="accent" />
       <Button {...args} tone="neutral" />
       <Button {...args} tone="ghost" />
-    </Stack>
+    </div>
   ),
 };
 
 export const Sizes: Story = {
   render: (args) => (
-    <Stack direction="row" gap="sm" align="center">
+    <div style={row}>
       <Button {...args} size="sm" />
       <Button {...args} size="md" />
       <Button {...args} size="lg" />
-    </Stack>
+    </div>
   ),
 };
 

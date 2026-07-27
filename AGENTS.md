@@ -67,6 +67,24 @@ is only useful as a prelude to a commit.
 "Commit this" authorises exactly the commit being discussed, not the ones after
 it. Ask again for the next one.
 
+## Changesets
+
+**Never create a changeset unless you were asked to.** Do not add one as an
+automatic follow-up to a code change, however obviously the change "needs" one.
+
+The bump level is a release decision, not a mechanical consequence of the diff.
+A removed export is formally a `major`, but the maintainer may still want it
+released as a `minor` — pre-1.0 packages in particular carry breaking changes in
+the minor segment, because `major` there means committing to 1.0.0. A changeset
+written on your own initiative presents that decision as already made, and it is
+the maintainer's to make.
+
+So: finish the change, then say that a changeset is needed and which bump level
+you would suggest — and stop there. When you are asked to write one, still state
+the reasoning for the level you picked, so it can be corrected before it reaches
+the version PR. Editing the level of an existing changeset is the same kind of
+decision and needs the same explicit request.
+
 ## Two rules that apply to every change
 
 Everything else about packaging and releasing lives in the skills below. These
