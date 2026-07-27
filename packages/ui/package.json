@@ -1,6 +1,6 @@
 {
-  "name": "@trailpack/ui",
-  "version": "0.0.0",
+  "name": "@trailpack/react-ui",
+  "version": "0.1.0",
   "description": "React component library and vanilla-extract theme for Trailpack projects.",
   "license": "ISC",
   "type": "module",
@@ -37,6 +37,7 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
     "dev": "storybook dev -p 6006 --no-open",
     "lint": "oxlint",
     "storybook:build": "storybook build -o storybook-static"

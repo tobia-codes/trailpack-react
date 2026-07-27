@@ -32,6 +32,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Packages ship build output that is gitignored, so it has to be produced
+      # here. Each package also has a `prepack` guard, but building up front
+      # fails the job before anything is published rather than mid-publish.
+      - run: pnpm build
+
       # Trusted publishing over OIDC requires npm >= 11.5.1, which Node 24
       # already bundles. Upgrading npm here is not possible anyway: the root
       # package.json declares devEngines.packageManager = pnpm, so npm exits
