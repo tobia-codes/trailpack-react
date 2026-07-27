@@ -1,13 +1,58 @@
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+
+/**
+ * With `cssCodeSplit` on, Vite emits one stylesheet per chunk: `theme.css` from
+ * the `theme/index` entry (the tokens) and `index.css` from `index` (the
+ * component rules). `theme.css` ships as it is, for consumers that want the
+ * tokens without the components.
+ *
+ * `styles.css` — the entry the whole library documents — is the two of them
+ * concatenated, so it keeps meaning "everything" and stays one request. The
+ * component-only half is dropped: component rules without the variables they
+ * reference are not a useful thing to import.
+ */
+function bundleStylesheet(): Plugin {
+  return {
+    name: 'trailpack-bundle-stylesheet',
+    generateBundle(_options, bundle) {
+      const tokens = bundle['theme.css'];
+      const components = bundle['index.css'];
+
+      // Loud on purpose. These names come from the entry names below, so a
+      // renamed entry or a moved import would otherwise publish a `styles.css`
+      // that had silently lost half its rules.
+      if (
+        tokens?.type !== 'asset' ||
+        components?.type !== 'asset' ||
+        typeof tokens.source !== 'string' ||
+        typeof components.source !== 'string'
+      ) {
+        throw new Error(
+          'Expected Vite to emit theme.css and index.css as text assets. ' +
+            `Got: ${Object.keys(bundle).join(', ')}`,
+        );
+      }
+
+      // Tokens first: the component rules reference the variables they declare.
+      this.emitFile({
+        type: 'asset',
+        fileName: 'styles.css',
+        source: `${tokens.source}${components.source}`,
+      });
+
+      delete bundle['index.css'];
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react(), vanillaExtractPlugin()],
+  plugins: [react(), vanillaExtractPlugin(), bundleStylesheet()],
   build: {
-    // One stylesheet for the whole library. With code splitting on, every entry
-    // would emit its own file and consumers would have to know which to import.
-    cssCodeSplit: false,
+    // On, so the tokens can be published without the component rules. The two
+    // halves are recombined into `styles.css` by the plugin above.
+    cssCodeSplit: true,
     sourcemap: true,
     lib: {
       entry: {
@@ -22,8 +67,9 @@ export default defineConfig({
       // anyway. Bundling it would ship the same code twice.
       external: [/^react($|\/)/, /^react-dom($|\/)/, /^@vanilla-extract\/recipes($|\/)/],
       output: {
-        assetFileNames: (asset) =>
-          asset.names?.some((name) => name.endsWith('.css')) ? 'styles.css' : '[name][extname]',
+        // Stylesheets are named after their chunk (`theme.css`, `index.css`);
+        // both are part of the public API, so nothing here may be hashed.
+        assetFileNames: '[name][extname]',
       },
     },
   },

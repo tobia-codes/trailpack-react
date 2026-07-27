@@ -6,7 +6,7 @@ const row = {
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: vars.space.sm,
+  gap: vars.space[2],
 } as const;
 
 const meta = {

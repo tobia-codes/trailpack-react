@@ -12,7 +12,8 @@
   },
   "files": [
     "dist",
-    "styles.css.d.ts"
+    "styles.css.d.ts",
+    "theme.css.d.ts"
   ],
   "type": "module",
   "sideEffects": [
@@ -30,6 +31,10 @@
     "./styles.css": {
       "types": "./styles.css.d.ts",
       "default": "./dist/styles.css"
+    },
+    "./theme.css": {
+      "types": "./theme.css.d.ts",
+      "default": "./dist/theme.css"
     }
   },
   "publishConfig": {
@@ -40,6 +45,7 @@
     "prepack": "pnpm build",
     "dev": "storybook dev -p 6006 --no-open",
     "lint": "oxlint",
+    "test": "vitest run",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "storybook:build": "storybook build -o storybook-static"
@@ -62,7 +68,8 @@
     "react-dom": "^19.2.8",
     "storybook": "^10.5.5",
     "typescript": "^7.0.2",
-    "vite": "^8.1.5"
+    "vite": "^8.1.5",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "react": "^19.0.0",
