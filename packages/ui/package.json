@@ -1,6 +1,6 @@
 {
   "name": "@trailpack/react-ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React component library and vanilla-extract theme for Trailpack projects.",
   "homepage": "https://github.com/tobia-codes/trailpack-react/tree/main/packages/ui",
   "bugs": "https://github.com/tobia-codes/trailpack-react/issues",
