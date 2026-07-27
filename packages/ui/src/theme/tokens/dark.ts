@@ -1,10 +1,7 @@
 import { shared } from './shared';
 import type { ThemeTokens } from './light';
 
-/**
- * Dark theme. Typed against the light one, so neither can gain a token alone —
- * the two files stay in step without repeating the shape.
- */
+/** Dark theme. Typed against the light one, so neither can gain a token alone. */
 export const darkTokens: ThemeTokens = {
   ...shared,
 

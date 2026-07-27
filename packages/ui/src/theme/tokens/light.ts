@@ -1,25 +1,18 @@
 import { shared } from './shared';
 
 /**
- * Light theme, and the shape every other theme is measured against — the
- * contract is generated from it and `darkTokens` is typed by it, so a token
- * added here is a type error everywhere until it exists in both.
+ * Light theme, and the shape the contract and `darkTokens` are typed from.
  *
- * Plain literals, nothing computed: the palette is readable and reviewable as
- * data, and no colour maths ships to the browser.
- *
- * Every tone has the same nine steps, so a component can rely on
- * `tone.<x>.solidHover` existing for every `x`, and a tone added later cannot
- * arrive half-defined:
+ * Every tone has the same nine steps, so a component can index `vars.tone[x]`
+ * and a tone added later cannot arrive half-defined:
  *
  * - `solid` / `onSolid` — filled button or badge, and the text on it
  * - `subtle` / `onSubtle` — soft alert or badge fill, and the text on it
- * - `text` — the tone as text directly on a page surface (inline validation
- *   messages, links). Flat `x` / `xForeground` naming has no room for this, and
- *   amber is the reason it matters: `warning.solid` is ~2:1 on white.
+ * - `text` — the tone as text on a page surface. `warning.solid` is ~2:1 on
+ *   white, which is why this step exists separately.
  * - `border` — outline of a subtle fill, or a tinted divider
  *
- * The contrast pairings these promise are asserted in `../themes.test.ts`.
+ * The contrast pairings are asserted in `../themes.test.ts`.
  */
 export const lightTokens = {
   ...shared,
