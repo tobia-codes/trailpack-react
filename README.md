@@ -110,6 +110,24 @@ npmjs.com (Settings → Trusted Publisher), pointing at this repository and
 > `changeset publish`. Changesets detects the pnpm lockfile and shells out to
 > `pnpm publish`, which does not support OIDC.
 
+Trusted publishing attaches a **provenance statement** to every release, which
+npm validates against the package metadata. Each published package therefore
+needs a `repository` field pointing at this monorepo, including the `directory`
+it lives in:
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobia-codes/trailpack-react.git",
+    "directory": "packages/<name>"
+  }
+}
+```
+
+Without it the upload is rejected with `E422 — Failed to validate repository
+information`, *after* the provenance has already been signed.
+
 ### Trying it locally
 
 The version step is fully reversible, so you can rehearse it before pushing:

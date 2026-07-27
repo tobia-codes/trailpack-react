@@ -3,6 +3,13 @@
   "version": "0.1.1",
   "description": "Shared minimal oxlint + oxfmt config for Trailpack React projects.",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobia-codes/trailpack-react.git",
+    "directory": "packages/conventions"
+  },
+  "homepage": "https://github.com/tobia-codes/trailpack-react/tree/main/packages/conventions",
+  "bugs": "https://github.com/tobia-codes/trailpack-react/issues",
   "type": "module",
   "publishConfig": {
     "access": "public"
