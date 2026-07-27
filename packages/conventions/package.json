@@ -1,9 +1,12 @@
 {
   "name": "@trailpack/react-codeconventions",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Shared minimal oxlint + oxfmt config for Trailpack React projects.",
   "license": "ISC",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "oxlintrc.json",
     "oxfmtrc.json"
