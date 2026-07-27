@@ -11,9 +11,7 @@
     "directory": "packages/ui"
   },
   "files": [
-    "dist",
-    "styles.css.d.ts",
-    "theme.css.d.ts"
+    "dist"
   ],
   "type": "module",
   "sideEffects": [
@@ -29,11 +27,11 @@
       "default": "./dist/theme/index.js"
     },
     "./styles.css": {
-      "types": "./styles.css.d.ts",
+      "types": "./dist/styles.css.d.ts",
       "default": "./dist/styles.css"
     },
     "./theme.css": {
-      "types": "./theme.css.d.ts",
+      "types": "./dist/theme.css.d.ts",
       "default": "./dist/theme.css"
     }
   },
