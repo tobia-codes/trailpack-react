@@ -4,12 +4,30 @@ on:
   push:
     branches: [main]
 
+  # The prerelease path lives in this file because npm trusted publishing is
+  # configured against a repository *and a workflow filename* — a separate
+  # prerelease.yml would be rejected at publish time.
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: "npm dist-tag. Defaults to the branch name, normalised."
+        required: false
+        type: string
+      dry_run:
+        description: "Print what would be published and publish nothing"
+        required: false
+        default: false
+        type: boolean
+
+# Both jobs share one queue: publishes must not overlap, and a cancelled one
+# could leave the registry half-updated.
 concurrency:
   group: release
   cancel-in-progress: false
 
 jobs:
   release:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,6 +55,12 @@ jobs:
       # fails the job before anything is published rather than mid-publish.
       - run: pnpm build
 
+      # Repeated from CI, which cannot gate this job: both workflows are
+      # triggered independently, so a red CI run would not stop a publish.
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm format:check
+
       # Trusted publishing over OIDC requires npm >= 11.5.1, which Node 24
       # already bundles. Upgrading npm here is not possible anyway: the root
       # package.json declares devEngines.packageManager = pnpm, so npm exits
@@ -61,3 +85,73 @@ jobs:
         run: |
           pnpm changeset tag
           git push --tags
+
+  # Publishes the chosen branch as `0.0.0-<tag>-<timestamp>` under the dist-tag
+  # `<tag>`. Commits nothing and consumes no changeset, so the same changesets
+  # still produce the real release once they reach `main`.
+  prerelease:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Refuse to prerelease from main
+        if: github.ref_name == 'main'
+        run: |
+          echo "::error::Pick a branch other than main; main releases on push." >&2
+          exit 1
+
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm format:check
+
+      # A raw branch name is not a usable dist-tag: `feat/thing` would produce
+      # `0.0.0-feat/thing-…`, and a slash is illegal in a semver prerelease.
+      - name: Resolve dist-tag
+        id: tag
+        env:
+          BRANCH: ${{ github.ref_name }}
+          OVERRIDE: ${{ inputs.dist_tag }}
+        run: |
+          raw="${OVERRIDE:-$BRANCH}"
+          tag=$(printf '%s' "$raw" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+
+          if [ -z "$tag" ]; then
+            echo "::error::'$raw' leaves nothing usable as a dist-tag." >&2
+            exit 1
+          fi
+
+          if printf '%s' "$tag" | grep -Eq '^v?[0-9]+(\.[0-9]+)*$'; then
+            echo "::error::'$tag' looks like a version and cannot be a dist-tag." >&2
+            exit 1
+          fi
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Publishing '$raw' as dist-tag '$tag'." >> "$GITHUB_STEP_SUMMARY"
+
+      # Runner-local only. Packages without a pending changeset keep their
+      # released version and are skipped by the publish script.
+      - name: Version as snapshot
+        run: pnpm changeset version --snapshot "${{ steps.tag.outputs.tag }}"
+
+      - name: Publish snapshot
+        run: |
+          node scripts/publish-workspace.mjs \
+            --tag "${{ steps.tag.outputs.tag }}" \
+            ${{ inputs.dry_run && '--dry-run' || '' }}

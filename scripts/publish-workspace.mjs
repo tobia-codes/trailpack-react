@@ -7,6 +7,30 @@ import { execFileSync } from 'node:child_process';
 
 const dryRun = process.argv.includes('--dry-run');
 
+/**
+ * Optional npm dist-tag. Without one `npm publish` writes `latest`, including
+ * for prereleases, so anything published outside `main` must pass one.
+ */
+const distTag = (() => {
+  const index = process.argv.indexOf('--tag');
+
+  if (index === -1) {
+    return null;
+  }
+
+  const value = process.argv[index + 1];
+
+  if (!value || value.startsWith('--')) {
+    throw new Error('--tag needs a value, for example `--tag stage`.');
+  }
+
+  if (/^v?\d+(\.\d+)*$/.test(value)) {
+    throw new Error(`'${value}' looks like a version; npm rejects it as a dist-tag.`);
+  }
+
+  return value;
+})();
+
 // Every npm call runs in the package directory, never in the repo root: the
 // root package.json declares devEngines.packageManager = pnpm, which makes npm
 // refuse to run at all (EBADDEVENGINES).
@@ -65,7 +89,7 @@ for (const { name, version, path } of workspacePackages) {
     continue;
   }
 
-  console.log(`publish  ${name}@${version}`);
+  console.log(`publish  ${name}@${version}${distTag ? ` (dist-tag ${distTag})` : ''}`);
 
   if (dryRun) {
     publishedCount += 1;
@@ -73,7 +97,7 @@ for (const { name, version, path } of workspacePackages) {
   }
 
   try {
-    process.stdout.write(npm(['publish'], path));
+    process.stdout.write(npm(['publish', ...(distTag ? ['--tag', distTag] : [])], path));
     publishedCount += 1;
   } catch (error) {
     const stderr = stderrOf(error);

@@ -6,6 +6,10 @@
       "outputs": ["dist/**"]
     },
     "lint": {},
+    "format:check": {},
+    "format": {
+      "cache": false
+    },
     "test": {
       "dependsOn": ["^build"]
     },
